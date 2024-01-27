@@ -1,16 +1,16 @@
 import "./style.css";
 
-import { from } from "rxjs";
+import { interval, timer } from "rxjs";
 
 // rxjs
 const observer = {
-  next: (val: any) => console.log("response", val),
+  next: (val: any) => console.log(val),
   error: (val: any) => console.error(val),
   complete: () => {
     console.table("completed");
   },
 };
 
-// from operator: just like of() but smarter, can recognize arrays, strings, fetch() and iterable until completion
-const observable = from(fetch("api.github.com/users/sapeol"));
+// timer + interval operators: just like setInterval but for async and timer which is a smarter version of interval(needs two values)
+const observable = timer(0, 2000);
 observable.subscribe(observer);
