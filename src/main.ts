@@ -1,6 +1,6 @@
 import "./style.css";
 
-import { map, pluck, fromEvent, mapTo } from "rxjs";
+import { fromEvent, filter, map } from "rxjs";
 
 // rxjs
 const observer = {
@@ -11,10 +11,9 @@ const observer = {
   },
 };
 
-//  map is a transformation operator --
-// pluck can be also used to do the same thing
+// filter to filter out with constraints
 
 const keyPress$ = fromEvent<KeyboardEvent>(document, "keypress");
-const keyPressed$ = keyPress$.pipe(mapTo("key pressed!"));
-
-keyPressed$.subscribe(observer);
+const keyCodes$ = keyPress$.pipe(map((x) => x.code));
+const enter$ = keyCodes$.pipe(filter((x) => x === "Enter"));
+enter$.subscribe(observer);
