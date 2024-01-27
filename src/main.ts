@@ -1,6 +1,6 @@
 import "./style.css";
 
-import { map, pluck, fromEvent } from "rxjs";
+import { map, pluck, fromEvent, mapTo } from "rxjs";
 
 // rxjs
 const observer = {
@@ -15,7 +15,6 @@ const observer = {
 // pluck can be also used to do the same thing
 
 const keyPress$ = fromEvent<KeyboardEvent>(document, "keypress");
-const keyCode$ = keyPress$.pipe(map((x) => x.code));
-const keyCodeWithPluck$ = keyPress$.pipe(pluck("code"));
+const keyPressed$ = keyPress$.pipe(mapTo("key pressed!"));
 
-keyCodeWithPluck$.subscribe(observer);
+keyPressed$.subscribe(observer);
