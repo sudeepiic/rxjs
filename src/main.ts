@@ -1,16 +1,16 @@
 import "./style.css";
 
-import { range } from "rxjs";
+import { from } from "rxjs";
 
 // rxjs
 const observer = {
-  next: (val: any) => console.log("current value:", val),
+  next: (val: any) => console.log("response", val),
   error: (val: any) => console.error(val),
   complete: () => {
     console.table("completed");
   },
 };
 
-// Range: just like of() but for ranges
-const observable = range(1, 200);
+// from operator: just like of() but smarter, can recognize arrays, strings, fetch() and iterable until completion
+const observable = from(fetch("api.github.com/users/sapeol"));
 observable.subscribe(observer);
