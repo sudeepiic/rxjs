@@ -1,6 +1,6 @@
 import "./style.css";
 
-import { map, of, range } from "rxjs";
+import { map, pluck, fromEvent } from "rxjs";
 
 // rxjs
 const observer = {
@@ -11,6 +11,11 @@ const observer = {
   },
 };
 
-// timer + interval operators: just like setInterval but for async and timer which is a smarter version of interval(needs two values)
-const observable = range(0, 20);
-observable.pipe(map((x) => x * 12)).subscribe(observer);
+//  map is a transformation operator --
+// pluck can be also used to do the same thing
+
+const keyPress$ = fromEvent<KeyboardEvent>(document, "keypress");
+const keyCode$ = keyPress$.pipe(map((x) => x.code));
+const keyCodeWithPluck$ = keyPress$.pipe(pluck("code"));
+
+keyCodeWithPluck$.subscribe(observer);
