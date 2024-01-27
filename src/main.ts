@@ -11,9 +11,16 @@ const observer = {
   },
 };
 
-// filter to filter out with constraints
+// map & filter to create a scroll progress bar
+const scrollbar = document.querySelector<HTMLElement>(".scrollbar")!;
+const scrollPercent = (event: any) => {
+  const { scrollTop, scrollHeight, clientHeight } = event;
+  return (scrollTop / (scrollHeight - clientHeight)) * 100;
+};
 
-const keyPress$ = fromEvent<KeyboardEvent>(document, "keypress");
-const keyCodes$ = keyPress$.pipe(map((x) => x.code));
-const enter$ = keyCodes$.pipe(filter((x) => x === "Enter"));
-enter$.subscribe(observer);
+const scroll$ = fromEvent(document, "scroll");
+const scrollPercent$ = scroll$.pipe(
+  map(({ target }) => scrollPercent((target! as any).documentElement))
+);
+
+scrollPercent$.subscribe((percent) => (scrollbar.style.width = percent + "%"));
