@@ -1,6 +1,6 @@
 import "./style.css";
 
-import { fromEvent, of } from "rxjs";
+import { range } from "rxjs";
 
 // rxjs
 const observer = {
@@ -11,6 +11,6 @@ const observer = {
   },
 };
 
-// for creation observables from synchronous values, it iterates through without flattening anything
-const observable = of([2], 3, 231, 12, 31, 23, 1, 23, 1, 24, 412);
+// Range: just like of() but for ranges
+const observable = range(1, 200);
 observable.subscribe(observer);
