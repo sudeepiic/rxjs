@@ -1,6 +1,6 @@
 import "./style.css";
 
-import { interval, timer } from "rxjs";
+import { map, of, range } from "rxjs";
 
 // rxjs
 const observer = {
@@ -12,5 +12,5 @@ const observer = {
 };
 
 // timer + interval operators: just like setInterval but for async and timer which is a smarter version of interval(needs two values)
-const observable = timer(0, 2000);
-observable.subscribe(observer);
+const observable = range(0, 20);
+observable.pipe(map((x) => x * 12)).subscribe(observer);
