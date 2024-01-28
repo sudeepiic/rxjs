@@ -1,6 +1,6 @@
 import "./style.css";
 
-import { fromEvent, map, sampleTime } from "rxjs";
+import { fromEvent, map, auditTime } from "rxjs";
 
 // rxjs
 const observer = {
@@ -13,10 +13,10 @@ const observer = {
 
 const input$ = fromEvent(document, "click");
 
-// sampleTime: takes a sample of a source obs$
+// auditTime: takes a sample of a source obs$ after a certain time
 input$
   .pipe(
-    sampleTime(1000),
+    auditTime(1000),
     map((event: any) => {
       return { x: event.clientX, y: event.clientY };
     })
