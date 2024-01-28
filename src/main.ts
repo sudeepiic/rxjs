@@ -1,6 +1,15 @@
 import "./style.css";
 
-import { fromEvent, filter, map } from "rxjs";
+import {
+  fromEvent,
+  filter,
+  map,
+  of,
+  reduce,
+  range,
+  interval,
+  take,
+} from "rxjs";
 
 // rxjs
 const observer = {
@@ -11,16 +20,12 @@ const observer = {
   },
 };
 
-// map & filter to create a scroll progress bar
-const scrollbar = document.querySelector<HTMLElement>(".scrollbar")!;
-const scrollPercent = (event: any) => {
-  const { scrollTop, scrollHeight, clientHeight } = event;
-  return (scrollTop / (scrollHeight - clientHeight)) * 100;
-};
+// reduce transformation operator with interval that going infinite so using a take operator to limit the amount of 'takes' we want
+const obs$ = interval(100);
 
-const scroll$ = fromEvent(document, "scroll");
-const scrollPercent$ = scroll$.pipe(
-  map(({ target }) => scrollPercent((target! as any).documentElement))
+const added$ = obs$.pipe(
+  take(10),
+  reduce((x, cr) => x + cr, 0)
 );
 
-scrollPercent$.subscribe((percent) => (scrollbar.style.width = percent + "%"));
+added$.subscribe(observer);
