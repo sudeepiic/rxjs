@@ -21,20 +21,41 @@ const observer = {
     console.table("completed");
   },
 };
-const user = [
-  { name: "syd", login: false, age: 20 },
-  { name: "syd", login: false, age: 20 },
-  { name: "syd", login: false, age: 20 },
-  { name: "syd", login: true, age: 20 },
-];
-// scan operator: just like reduce but it emit accumulated values everytime the a new value is emitted from an observable
-const obs$ = from(user);
 
-const added$ = obs$.pipe(
-  scan((accumulator, crv) => {
-    return { ...accumulator, ...crv };
-  }, {})
-);
-const loginStatus$ = added$.pipe(map((crv: any) => crv.login));
+// streams
+const counter$ = interval(1000);
+const btn = document.querySelector("#counter")!;
+counter$
+  .pipe(
+    map(() => -1),
+    scan((acc, crv) => acc + crv, 6),
+    filter((val) => val >= 0)
+  )
+  .subscribe({
+    next: (val) => {
+      if (val) {
+        btn.innerHTML = val.toString();
+      } else {
+        btn.innerHTML = "Time's up";
+      }
+    },
+    complete() {
+      btn.innerHTML = "Time's up";
+    },
+  });
 
-loginStatus$.subscribe(observer);
+console.log(`// streams
+const counter$ = interval(1000);
+const btn = document.querySelector("#counter")!;
+counter$
+  .pipe(
+    map(() => -1),
+    scan((acc, crv) => acc + crv, 20),
+    filter((val) => val >= 0)
+  )
+  .subscribe({
+    next: (val) => {
+      btn.innerHTML = val.toString();
+      return val;
+    },
+  });`);
