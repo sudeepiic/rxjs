@@ -1,17 +1,6 @@
 import "./style.css";
 
-import {
-  distinctUntilChanged,
-  first,
-  fromEvent,
-  interval,
-  map,
-  of,
-  range,
-  take,
-  takeUntil,
-  takeWhile,
-} from "rxjs";
+import { debounceTime, fromEvent, map } from "rxjs";
 
 // rxjs
 const observer = {
@@ -22,32 +11,14 @@ const observer = {
   },
 };
 
-const of$ = of(
-  1,
-  2,
-  3,
-  4,
-  4,
-  2,
-  4,
-  3,
-  3,
-  4,
-  4,
-  2,
-  3,
-  3,
-  1,
-  2,
-  23,
-  6,
-  6,
-  6,
-  63,
-  34,
-  234,
-  234
-);
+const input = document.querySelector("input")!;
 
-// distinctUntilChanged: emits distinct sequential values
-of$.pipe(distinctUntilChanged()).subscribe(observer);
+const inputClick$ = fromEvent<HTMLInputElement>(input, "keyup");
+
+// debounceTime: debouces until a certain time has passed that is proved in the argument
+inputClick$
+  .pipe(
+    debounceTime(500),
+    map((event: any) => event.target?.value)
+  )
+  .subscribe(observer);
