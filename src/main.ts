@@ -1,10 +1,12 @@
 import "./style.css";
 
 import {
+  distinctUntilChanged,
   first,
   fromEvent,
   interval,
   map,
+  of,
   range,
   take,
   takeUntil,
@@ -20,7 +22,32 @@ const observer = {
   },
 };
 
-const mouseClicks$ = fromEvent<MouseEvent>(document, "click");
-const interval$ = interval(1000);
-// takeUntil: emits while another observable that is provided to it has not emited any values
-interval$.pipe(takeUntil(mouseClicks$)).subscribe(observer);
+const of$ = of(
+  1,
+  2,
+  3,
+  4,
+  4,
+  2,
+  4,
+  3,
+  3,
+  4,
+  4,
+  2,
+  3,
+  3,
+  1,
+  2,
+  23,
+  6,
+  6,
+  6,
+  63,
+  34,
+  234,
+  234
+);
+
+// distinctUntilChanged: emits distinct sequential values
+of$.pipe(distinctUntilChanged()).subscribe(observer);
