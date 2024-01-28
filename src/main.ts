@@ -1,17 +1,23 @@
 import "./style.css";
 
-import { map, range, tap } from "rxjs";
+import { first, fromEvent, map, range, take } from "rxjs";
 
 // rxjs
+const observer = {
+  next: (val: any) => console.log(val),
+  error: (val: any) => console.error(val),
+  complete: () => {
+    console.table("completed");
+  },
+};
 
-const observable = range(0, 5);
+const observable = fromEvent<MouseEvent>(document, "click");
 
 // tap: use it to log observable streams
-
+// first: use to take a first value that accepts the predicate
 observable
   .pipe(
-    tap((x) => console.log("before:", x)),
-    map((x) => x * 2),
-    tap((x) => console.log("after:", x))
+    map((event) => ({ x: event.clientX, y: event.clientY })),
+    first(({ x }) => x > 200)
   )
-  .subscribe();
+  .subscribe(observer);
