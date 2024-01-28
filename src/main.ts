@@ -9,6 +9,8 @@ import {
   range,
   interval,
   take,
+  scan,
+  from,
 } from "rxjs";
 
 // rxjs
@@ -19,13 +21,20 @@ const observer = {
     console.table("completed");
   },
 };
-
-// reduce transformation operator with interval that going infinite so using a take operator to limit the amount of 'takes' we want
-const obs$ = interval(100);
+const user = [
+  { name: "syd", login: false, age: 20 },
+  { name: "syd", login: false, age: 20 },
+  { name: "syd", login: false, age: 20 },
+  { name: "syd", login: true, age: 20 },
+];
+// scan operator: just like reduce but it emit accumulated values everytime the a new value is emitted from an observable
+const obs$ = from(user);
 
 const added$ = obs$.pipe(
-  take(10),
-  reduce((x, cr) => x + cr, 0)
+  scan((accumulator, crv) => {
+    return { ...accumulator, ...crv };
+  }, {})
 );
+const loginStatus$ = added$.pipe(map((crv: any) => crv.login));
 
-added$.subscribe(observer);
+loginStatus$.subscribe(observer);
