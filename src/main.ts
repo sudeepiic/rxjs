@@ -1,6 +1,13 @@
 import "./style.css";
 
-import { debounceTime, fromEvent, map } from "rxjs";
+import {
+  debounce,
+  debounceTime,
+  distinctUntilChanged,
+  fromEvent,
+  interval,
+  map,
+} from "rxjs";
 
 // rxjs
 const observer = {
@@ -15,10 +22,11 @@ const input = document.querySelector("input")!;
 
 const inputClick$ = fromEvent<HTMLInputElement>(input, "keyup");
 
-// debounceTime: debouces until a certain time has passed that is proved in the argument
+// debounce: needs and function that is an obs$ to support dynamic deboucing
 inputClick$
   .pipe(
-    debounceTime(500),
-    map((event: any) => event.target?.value)
+    debounce(() => interval(500)),
+    map((event: any) => event.target?.value),
+    distinctUntilChanged()
   )
   .subscribe(observer);
