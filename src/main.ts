@@ -1,6 +1,15 @@
 import "./style.css";
 
-import { first, fromEvent, map, range, take, takeWhile } from "rxjs";
+import {
+  first,
+  fromEvent,
+  interval,
+  map,
+  range,
+  take,
+  takeUntil,
+  takeWhile,
+} from "rxjs";
 
 // rxjs
 const observer = {
@@ -11,12 +20,7 @@ const observer = {
   },
 };
 
-const observable = fromEvent<MouseEvent>(document, "click");
-
-// takeWhile: emits while true
-observable
-  .pipe(
-    map((event) => ({ x: event.clientX, y: event.clientY })),
-    takeWhile(({ x, y }) => x > 200 && y > 33, true)
-  )
-  .subscribe(observer);
+const mouseClicks$ = fromEvent<MouseEvent>(document, "click");
+const interval$ = interval(1000);
+// takeUntil: emits while another observable that is provided to it has not emited any values
+interval$.pipe(takeUntil(mouseClicks$)).subscribe(observer);
