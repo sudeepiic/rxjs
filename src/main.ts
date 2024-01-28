@@ -1,6 +1,6 @@
 import "./style.css";
 
-import { first, fromEvent, map, range, take } from "rxjs";
+import { first, fromEvent, map, range, take, takeWhile } from "rxjs";
 
 // rxjs
 const observer = {
@@ -13,11 +13,10 @@ const observer = {
 
 const observable = fromEvent<MouseEvent>(document, "click");
 
-// tap: use it to log observable streams
-// first: use to take a first value that accepts the predicate
+// takeWhile: emits while true
 observable
   .pipe(
     map((event) => ({ x: event.clientX, y: event.clientY })),
-    first(({ x }) => x > 200)
+    takeWhile(({ x, y }) => x > 200 && y > 33, true)
   )
   .subscribe(observer);
