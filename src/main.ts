@@ -1,15 +1,6 @@
 import "./style.css";
 
-import {
-  debounce,
-  asyncScheduler,
-  distinctUntilChanged,
-  fromEvent,
-  interval,
-  map,
-  throttle,
-  throttleTime,
-} from "rxjs";
+import { fromEvent, map, sampleTime } from "rxjs";
 
 // rxjs
 const observer = {
@@ -20,15 +11,14 @@ const observer = {
   },
 };
 
-const input = document.querySelector("input")!;
+const input$ = fromEvent(document, "click");
 
-const inputClick$ = fromEvent<HTMLInputElement>(input, "keyup");
-
-// throttleTime: throttles stream until time passed, you can scheduler with config or leading or trailing
-inputClick$
+// sampleTime: takes a sample of a source obs$
+input$
   .pipe(
-    throttleTime(1000, asyncScheduler, { leading: false, trailing: true }),
-    map((event: any) => event.target?.value),
-    distinctUntilChanged()
+    sampleTime(1000),
+    map((event: any) => {
+      return { x: event.clientX, y: event.clientY };
+    })
   )
   .subscribe(observer);
