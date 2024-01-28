@@ -2,11 +2,13 @@ import "./style.css";
 
 import {
   debounce,
-  debounceTime,
+  asyncScheduler,
   distinctUntilChanged,
   fromEvent,
   interval,
   map,
+  throttle,
+  throttleTime,
 } from "rxjs";
 
 // rxjs
@@ -22,10 +24,10 @@ const input = document.querySelector("input")!;
 
 const inputClick$ = fromEvent<HTMLInputElement>(input, "keyup");
 
-// debounce: needs and function that is an obs$ to support dynamic deboucing
+// throttleTime: throttles stream until time passed, you can scheduler with config or leading or trailing
 inputClick$
   .pipe(
-    debounce(() => interval(500)),
+    throttleTime(1000, asyncScheduler, { leading: false, trailing: true }),
     map((event: any) => event.target?.value),
     distinctUntilChanged()
   )
